@@ -1,0 +1,74 @@
+# Namespace
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: proyecto-opcional
+
+---
+# Deployment
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+  namespace : proyecto-opcional
+
+spec:
+
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+
+
+---
+# POD
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace : proyecto-opcional
+
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+
+---
+# Servicio
+# https://kubernetes.io/docs/concepts/services-networking/service/
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+  namespace : proyecto-opcional
+  
+spec:
+  selector:
+    app.kubernetes.io/name: MyApp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+
+# https://helm.sh/docs/topics/charts/
