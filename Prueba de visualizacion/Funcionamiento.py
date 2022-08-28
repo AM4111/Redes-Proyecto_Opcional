@@ -1,6 +1,4 @@
-import posix
-from this import d
-
+import tkinter
 
 class GameState():
 
