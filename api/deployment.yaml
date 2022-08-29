@@ -1,0 +1,47 @@
+# Namespace
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: proyecto-opcional
+
+--- 
+# Service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rest-api-service
+  namespace: proyecto-opcional
+spec:
+  selector:
+    app: py-image
+  ports:
+  - protocol: "TCP"
+    port: 8443
+    targetPort: 80
+  type: ClusterIP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: py-deployment
+  namespace: proyecto-opcional
+spec:
+  replicas: 2
+  selector:
+      matchLabels:
+        app: py-image
+  template:
+    metadata:
+      labels:
+        app: py-image
+    spec:
+      containers:
+      - name: py-image
+        image: py-image:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
